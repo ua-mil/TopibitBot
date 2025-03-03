@@ -3,7 +3,7 @@ import asyncio
 import numpy as np
 import pandas as pd
 from aiogram import Bot, Dispatcher, types
-from aiogram.types import ParseMode
+from aiogram.enums import ParseMode
 from aiogram.utils import executor
 
 # 🔹 Настройки
