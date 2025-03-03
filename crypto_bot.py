@@ -7,8 +7,8 @@ from aiogram.types import ParseMode
 from aiogram.utils import executor
 
 # 🔹 Настройки
-API_TOKEN = "8153754798:AAGY5YkGcq9iNc_bhF62Q73wSJgv8aO7ZRk"
-CHAT_ID = "178010516"  # Можно узнать через @userinfobot
+API_TOKEN = os.getenv("8153754798:AAGY5YkGcq9iNc_bhF62Q73wSJgv8aO7ZRk")
+CHAT_ID = os.getenv("178010516")  # Можно узнать через @userinfobot
 SYMBOL = "BTC/USDT"  # Валютная пара
 EXCHANGE_NAME = "binance"  # Биржа
 MA_SHORT = 7  # Короткая скользящая средняя
