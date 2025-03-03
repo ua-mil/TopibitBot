@@ -4,7 +4,13 @@ import numpy as np
 import pandas as pd
 from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
-from aiogram.utils import executor
+import asyncio
+
+async def main():
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
 
 # 🔹 Настройки
 API_TOKEN = os.getenv("8153754798:AAGY5YkGcq9iNc_bhF62Q73wSJgv8aO7ZRk")
