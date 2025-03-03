@@ -1,0 +1,5 @@
+ccxt
+aiogram
+pandas
+numpy
+python-dotenv
