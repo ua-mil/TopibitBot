@@ -1,19 +1,19 @@
 import os
-import ccxt
+import ccxt.async_support as ccxt
 import asyncio
 import numpy as np
 import pandas as pd
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
 
 # 🔹 Настройки
-API_TOKEN = os.getenv("8153754798:AAGY5YkGcq9iNc_bhF62Q73wSJgv8aO7ZRk")  # Переменные окружения должны быть правильными
-CHAT_ID = os.getenv("178010516")  # ID чата
-SYMBOL = "BTC/USDT"  # Валютная пара
-EXCHANGE_NAME = "binance"  # Биржа
-MA_SHORT = 7  # Короткая скользящая средняя
-MA_LONG = 25  # Длинная скользящая средняя
-TIMEFRAME = "1h"  # Таймфрейм (1h = 1 час)
+API_TOKEN = os.getenv("8153754798:AAGY5YkGcq9iNc_bhF62Q73wSJgv8aO7ZRk")
+CHAT_ID = os.getenv("178010516")
+SYMBOL = "BTC/USDT"
+EXCHANGE_NAME = "binance"
+MA_SHORT = 7
+MA_LONG = 25
+TIMEFRAME = "1h"
 
 # 🔹 Подключаем Telegram-бота
 bot = Bot(token=API_TOKEN, parse_mode=ParseMode.MARKDOWN)
@@ -25,7 +25,7 @@ exchange = getattr(ccxt, EXCHANGE_NAME)({'rateLimit': 1200})
 async def get_signal():
     """Проверка пересечения скользящих средних и отправка сигналов"""
     try:
-        candles = exchange.fetch_ohlcv(SYMBOL, timeframe=TIMEFRAME, limit=MA_LONG)
+        candles = await exchange.fetch_ohlcv(SYMBOL, timeframe=TIMEFRAME, limit=MA_LONG)
         df = pd.DataFrame(candles, columns=["timestamp", "open", "high", "low", "close", "volume"])
         df["ma_short"] = df["close"].rolling(MA_SHORT).mean()
         df["ma_long"] = df["close"].rolling(MA_LONG).mean()
@@ -38,16 +38,14 @@ async def get_signal():
     except Exception as e:
         print(f"Ошибка: {e}")
 
-async def start_signal_check():
-    """Проверяет рынок каждую минуту"""
+async def start_bot():
+    """Запускаем бота и проверяем рынок каждую минуту"""
     while True:
         await get_signal()
-        await asyncio.sleep(60)  # Проверяем раз в минуту
+        await asyncio.sleep(60)
 
 async def main():
-    """Основная функция запуска бота"""
-    asyncio.create_task(start_signal_check())  # Запускаем мониторинг сигналов
-    await dp.start_polling(bot)  # Запускаем Telegram-бота
+    await dp.start_polling(bot)
 
 if __name__ == "__main__":
-    asyncio.run(main())  # Запуск бота и мониторинга
+    asyncio.run(main())
